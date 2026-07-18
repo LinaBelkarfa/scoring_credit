@@ -24,7 +24,8 @@ Pour optimiser le modèle, nous nous concentrons sur :
 ### Métriques clés ciblées :
 *   **Le Rappel (Recall / Sensitivity)** : C'est notre métrique prioritaire. Un rappel élevé garantit que l'on capture un maximum d'agents en défaut. (TP/(TP+FN)). Sur tous les vrais défauts, combien le modèle a-t-il réussi à en bloquer ?
 *   **La Precision** : C'est la seconde métrique, sur tous les clients que le modèle prédit en défaut (bloqués), combien allaient vraiment faire défaut ? Une bonne précision évite au modèle d'être trop paranoïaque et de refuser inutilement des crédits à des clients qui auraient pourtant été solvables (les Faux Positifs). (TP/(TP+FP)). 
-*   **Le F2-Score** : Une variante du F1-score qui donne deux fois plus d'importance au Rappel qu'à la Précision, idéale pour notre cas de figure.
+*   **Le F2-Score** : Une variante du F1-score qui donne plus d'importance au Rappel qu'à la Précision, idéale pour notre cas de figure. Formule mathématique du $F_2\text{-Score}$ : 
+$$F_2 = \frac{5 \times \text{VP}}{(5 \times \text{VP}) + (4 \times \text{FN}) + \text{FP}}$$
 *   **L'AUC-PR (Area Under the Curve Precision-Recall)** : Contrairement à l'AUC-ROC classique qui peut être trompée par un grand nombre de clients solvables (Vrais Négatifs), l'AUC-PR se concentre uniquement sur la classe minoritaire (le défaut de paiement). Elle calcule l'aire sous la courbe qui combine la Précision et le Rappel pour tous les seuils de décision possibles. Plus ce score est proche de 1, plus le modèle est robuste pour identifier les profils à risque sans générer de faux diagnostics, ce qui en fait notre indicateur global le plus fiable face au fort déséquilibre de nos données.
 
 ## Architecture du Projet
