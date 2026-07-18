@@ -61,3 +61,83 @@ Une fois connecté à l'intérieur du conteneur (le terminal affiche `root@...:/
 
 ```bash
 pip install -r requirements.txt
+```
+
+
+# Dictionnaire des Données (Data Dictionary)
+
+Le dataset contient les informations sociodémographiques et financières des clients. L'objectif est de prédire la variable cible `default`.
+
+### Identification & Structure
+*   **`ncust`** : Numéro d'identification interne du client (identifiant court).
+    *   *Type :* Numérique / Identifiant.
+    *   *Valeurs :* Entiers de `1919` à `4809`.
+    *   *⚠️ Note de Data Cleaning :* À supprimer avant l'entraînement car ce n'est pas une variable prédictive.
+*   **`customer`** : Identifiant global du client dans le système bancaire (identifiant long).
+    *   *Type :* Numérique / Identifiant[cite: 1].
+    *   *Valeurs :* Entiers de `10012` à `453777`[cite: 1].
+    *   *⚠️ Note de Data Cleaning :* À supprimer également car ce n'est pas une variable prédictive.
+
+*   **`branch`** : Code de l'agence bancaire ou zone géographique de rattachement du client.
+    *   *Type :* Catégorielle (doit être convertie en `factor` / `category`).
+    *   *Valeurs :* Entiers (ex: agence `3` à `91`).
+
+### Profil Sociodémographique
+*   **`age`** : Âge du client.
+    *   *Type :* Numérique continu (Entier).
+    *   *Valeurs :* De `18` à `79` ans (Médiane : `31` ans).
+*   **`ed`** : Niveau d'études atteint par le client.
+    *   *Type :* Catégorielle ordinale (`ordered factor`).
+    *   *Valeurs :* `Niveau bac` < `Bac+2` < `Bac+3` < `Bac+4` < `Bac+5 et plus`.
+*   **`employ`** : Ancienneté professionnelle (nombre d'années passées chez l'employeur actuel).
+    *   *Type :* Numérique continu.
+    *   *Valeurs :* De `0` à `63` ans.
+*   **`address`** : Stabilité résidentielle (nombre d'années passées à l'adresse actuelle).
+    *   *Type :* Numérique continu.
+    *   *Valeurs :* De `0` à `34` ans.
+
+### Profil Financier & Endettement
+*   **`income`** : Revenu annuel du client (généralement exprimé en milliers d'unités, par exemple 12€ = 12000€).
+    *   *Type :* Numérique continu.
+    *   *Valeurs :* De `12.0` à `1079.0` (Médiane : `39.0`).
+*   **`debtinc`** (*Debt-to-Income ratio*) : Taux d'endettement global (pourcentage du revenu mensuel/annuel consacré au remboursement des dettes).
+    *   *Type :* Numérique continu (Pourcentage).
+    *   *Valeurs :* De `0.0%` à `40.7%` (Médiane : `8.5%`).
+*   **`creddebt`** (*Credit Debt*) : Encours de la dette liée aux cartes de crédit et crédits à la consommation.
+    *   *Type :* Numérique continu.
+    *   *Valeurs :* De `0.0` à `35.97`.
+*   **`othdebt`** (*Other Debt*) : Encours des autres types de dettes privées ou bancaires (prêts auto, personnels, etc.).
+    *   *Type :* Numérique continu.
+    *   *Valeurs :* De `0.00` à `63.47`.
+
+### Target (Variable Cible)
+*   **`default`** : Statut de défaut de paiement du client (Variable à prédire).
+    *   *Type :* Catégorielle binaire.
+    *   *Valeurs :* 
+        *   `Oui` (Classe Positive) : Le client a été en défaut de paiement (risque élevé).
+        *   `Non` (Classe Négative) : Le client a remboursé son crédit normalement.
+    *   *Distribution initiale :* ~37,3% de `Oui` pour ~62,7% de `Non`.
+
+## Cohérence Mathématique des Variables Financières
+
+Il existe une relation mathématique exacte entre le taux d'endettement (`debtinc`), le revenu (`income`) et les encours de dettes (`creddebt` et `othdebt`). La variable `debtinc` (*Debt-to-Income ratio*) n'est pas une donnée brute, mais le résultat direct du calcul de la charge de la dette totale par rapport au revenu.
+
+Tous les montants financiers (`income`, `creddebt`, `othdebt`) sont exprimés **en milliers d'euros (k€)**.
+
+#### 📝 Formule :
+$$\text{debtinc} = \frac{\text{creddebt} + \text{othdebt}}{\text{income}} \times 100$$
+
+#### 🔍 Exemple concret (Ligne 1 du dataset) :
+Si l'on prend les données du premier client du jeu de données :
+*   **`income`** : $44$ ($44\ 000\text{ €}$)
+*   **`creddebt`** : $2.99$ ($2\ 990\text{ €}$)
+*   **`othdebt`** : $4.79$ ($4\ 790\text{ €}$)
+
+1. **Calcul de la dette totale :** 
+   $$2.99 + 4.79 = 7.78\text{ k€}$$
+2. **Calcul du ratio d'endettement :** 
+   $$\frac{7.78}{44} \times 100 = 17.68\%$$
+
+Ce résultat correspond (après arrondi) à la valeur stockée dans la colonne **`debtinc`** ($17.7\%$).
+
+> 💡 **Note pour le Feature Engineering :** Cette colinéarité parfaite implique qu'il faudra évaluer la pertinence de conserver les trois variables financières conjointement lors de la phase d'entraînement de certains modèles sensibles à la multi-colinéarité (comme la régression logistique ou le SVM linéaire).

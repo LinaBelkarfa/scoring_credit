@@ -22,7 +22,7 @@ def run_pipeline():
     logger.info("===== DÉMARRAGE DU PIPELINE DE SCORING CRÉDIT =====")
     
     # 0. Vérification des chemins de données
-    path_data = "data/input/Data Projet.csv"
+    path_data = "data/input/data_scoring_credit.csv"
     if not os.path.exists(path_data):
         logger.error(f"Le fichier de données est introuvable au chemin : {path_data}")
         logger.info("Veuillez placer votre fichier CSV dans le dossier 'data/'")
