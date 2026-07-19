@@ -1,8 +1,25 @@
+# Core Data Science & Analysis
 numpy==1.26.4
 pandas==2.2.2
+
+# Automated Data Profiling & EDA
+ydata-profiling==4.18.4
+sweetviz==2.3.3
+
+# Data Visualization
+matplotlib==3.10.0
+seaborn==0.13.2
+plotly==6.9.0
+
+# Machine Learning & Modeling
 scikit-learn==1.5.1
 xgboost==2.1.4
 lightgbm==4.6.0
 catboost==1.2.10
+
+# Model Explainability (XAI)
 shap==0.46.0
-ipykernel>=6.0.0
+
+# Jupyter Notebook Utilities
+ipykernel==7.3.0
+ipywidgets==8.1.5
