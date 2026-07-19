@@ -142,3 +142,22 @@ Si l'on prend les données du premier client du jeu de données :
 Ce résultat correspond (après arrondi) à la valeur stockée dans la colonne **`debtinc`** ($17.7\%$).
 
 > 💡 **Note pour le Feature Engineering :** Cette colinéarité parfaite implique qu'il faudra évaluer la pertinence de conserver les trois variables financières conjointement lors de la phase d'entraînement de certains modèles sensibles à la multi-colinéarité (comme la régression logistique ou le SVM linéaire).
+
+## Modèles de Classification Évalués
+
+### Modèles Linéaires et Statistiques
+*   **LogisticRegression** : Modèle linéaire probabiliste qui estime la probabilité d'un défaut de crédit en appliquant une fonction logistique à une combinaison linéaire des variables explicatives. Il sert de *baseline* classique, hautement interprétable et rapide à entraîner.
+*   **LinearDiscriminantAnalysis** : Méthode géométrique et statistique qui cherche à trouver la combinaison linéaire de variables séparent le mieux les clients sains des clients en défaut. Elle repose sur l'hypothèse que les variables suivent une distribution normale avec des matrices de covariance égales entre les classes.
+*   **GaussianNB** : Modèle probabiliste fondé sur le théorème de Bayes qui suppose, de manière "naïve", que toutes les variables prédictives sont totalement indépendantes les unes des autres sachant la classe. Il calcule rapidement les probabilités d'appartenance en modélisant les variables continues par des lois normales.
+
+### Modèles à Marges (Séparation Géométrique)
+*   **SVM (Support Vector Machine)** : Algorithme géométrique qui cherche à trouver l'hyperplan de séparation optimal maximisant la marge entre les clients sains et les clients en défaut. L'utilisation de fonctions de noyau (*kernels*) lui permet de projeter les données dans un espace de dimension supérieure pour résoudre des problèmes de classification non linéaires complexes.
+
+### Algorithmes Basés sur des Arbres (Bagging)
+*   **DecisionTree** : Algorithme non paramétrique qui segmente les données de manière séquentielle sous forme de règles de décision binaires pour maximiser la pureté des nœuds. Bien que simple et visuel, il est très sensible au surapprentissage s'il n'est pas correctement élagué.
+*   **RandomForest** : Algorithme de *Bagging* qui combine les prédictions de multiples arbres de décision indépendants, entraînés en parallèle sur des sous-ensembles aléatoires de données et de variables. La moyenne (ou le vote) de ces arbres permet de réduire drastiquement la variance et le risque de surapprentissage.
+
+### Algorithmes de Boosting Avancés
+*   **XGBoost** : Puissante implémentation du *Gradient Boosting* qui construit des arbres de décision de manière séquentielle, où chaque nouvel arbre est optimisé pour corriger les erreurs de prédiction (résidus) des précédents. Il intègre des régularisations avancées et une parallélisation interne pour optimiser les performances.
+*   **LightGBM** : Algorithme de *Gradient Boosting* développé par Microsoft, optimisé pour la rapidité et les grands volumes de données grâce à une croissance des arbres par feuilles (*leaf-wise*). Il utilise également un échantillonnage basé sur le gradient pour accélérer considérablement l'entraînement tout en réduisant l'empreinte mémoire.
+*   **CatBoost** : Algorithme de *Gradient Boosting* développé par Yandex, particulièrement robuste et performant grâce à sa gestion native et optimisée des variables catégorielles sans encodage préalable lourd. Il utilise des arbres symétriques pour accélérer le temps d'inférence et un système de permutation pour contrer le surapprentissage.
